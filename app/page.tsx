@@ -135,10 +135,6 @@ export default function Qwe() {
 }
 
 
-
-
-
-
 function Cell(props: { text: string, row: number, column: number }) {
 
 
@@ -178,10 +174,14 @@ function Cell(props: { text: string, row: number, column: number }) {
   function InnerComponentLeft(): string {
     return Math.round(GlobalSettings.size * 0.15) + "px";
   }
+  
+  function BackgroundColor():string{
+    return 'green'; 
+  }
 
   return (
     <div id={props.column + '_' + props.row} className="hexagon flat" style={{ top: GetTop(), left: Left(), height: ElementHeight() + "px", width: ElementWidth() + "px" }} >
-      <div className="hexText">{props.text}</div>
+      <div style={{backgroundColor:BackgroundColor()}} className="hexText">{props.text}</div>
       <div>
         <div className="h1" style={{ width: InnerElementWidth(), height: InnerElementHeight(),top:InnerComponentTop(),left:InnerComponentLeft() }} />
         <div className="h2" style={{ width: InnerElementWidth(), height: InnerElementHeight(),top:InnerComponentTop(),left:InnerComponentLeft() }} />
