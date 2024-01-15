@@ -1,8 +1,11 @@
 import Image from 'next/image'
-
-export default function Home() {
+import { TestComp, TestCompDalsi } from './test'
+/*
+export default function Homes() {
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
+      <TestComp/>
+      <TestCompDalsi/>
       <div className="z-10 max-w-5xl w-full items-center justify-between font-mono text-sm lg:flex">
         <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
           Get started by editing&nbsp;
@@ -111,3 +114,80 @@ export default function Home() {
     </main>
   )
 }
+*/
+
+
+const GlobalSettings = {
+  size: 50
+};
+
+
+
+export default function Qwe() {
+
+  const rows = [];
+  for (let i = 0; i < 10; i++) {
+    for (let j = 0; j < 10; j++) {
+      rows.push(<Cell text='test' column={i} row={j} />);
+    }
+  }
+  return <div>{rows}</div>;
+}
+
+
+
+
+
+
+function Cell(props: { text: string, row: number, column: number }) {
+
+
+  function GetTop(): string {
+    let value = props.row * ElementHeight();
+
+    if (props.column % 2 != 0)
+      value += Math.round(ElementHeight() / 2);
+
+    return value + "px";
+  }
+
+  function Left(): string {
+    return Math.round(props.column * ElementWidth() * 3 / 4) + "px";
+  }
+
+  function ElementHeight(): number {
+    return InnerElementWidth();
+  }
+
+  function ElementWidth(): number {
+    return GlobalSettings.size * 2;
+  }
+
+  function InnerElementWidth(): number {
+    return Math.round(Math.sqrt(3) * GlobalSettings.size);
+  }
+
+  function InnerElementHeight(): number {
+    return GlobalSettings.size;
+  }
+
+  function InnerComponentTop(): string {
+    return Math.round(GlobalSettings.size * 0.4) + "px";
+  }
+
+  function InnerComponentLeft(): string {
+    return Math.round(GlobalSettings.size * 0.15) + "px";
+  }
+
+  return (
+    <div id={props.column + '_' + props.row} className="hexagon flat" style={{ top: GetTop(), left: Left(), height: ElementHeight() + "px", width: ElementWidth() + "px" }} >
+      <div className="hexText">{props.text}</div>
+      <div>
+        <div className="h1" style={{ width: InnerElementWidth(), height: InnerElementHeight(),top:InnerComponentTop(),left:InnerComponentLeft() }} />
+        <div className="h2" style={{ width: InnerElementWidth(), height: InnerElementHeight(),top:InnerComponentTop(),left:InnerComponentLeft() }} />
+        <div className="h3" style={{ width: InnerElementWidth(), height: InnerElementHeight(),top:InnerComponentTop(),left:InnerComponentLeft() }} />
+      </div>
+    </div>
+  )
+}
+

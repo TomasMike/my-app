@@ -1,27 +1,52 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+ .hexGrid {
+     position: absolute;
+     margin: 10px;
+     top: 50px;
+ }
 
-:root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
-}
+ .hexagon {
+     position: absolute;
+ }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
-  }
-}
 
-body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
-}
+ .hexagon>div>div {
+     position: absolute;
+     border-style: solid;
+     border-color: black;
+     border-width: 0px 1px;
+     margin: 0px;
+     background-color: rgb(120, 35, 35);
+     z-index: 1;
+ }
+
+ div.pointy .h1 {
+     transform: rotate(90deg);
+ }
+
+ div.pointy .h2 {
+     transform: rotate(30deg);
+ }
+
+ div.pointy .h3 {
+     transform: rotate(-30deg);
+ }
+
+ div.flat .h1 {
+     transform: rotate(90deg);
+ }
+
+ div.flat .h2 {
+     transform: rotate(30deg);
+ }
+
+ div.flat .h3 {
+     transform: rotate(-30deg);
+ }
+
+ .hexText {
+     z-index: 2;
+     position: absolute;
+     top: 40%;
+     left: 15%;
+     background-color: blue;
+ }
