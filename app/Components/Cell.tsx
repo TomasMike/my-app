@@ -2,8 +2,19 @@
 import { GameComponent } from "../Classes/classes";
 import { GlobalSettings } from "../page";
 
-export function Cell(props: {key:string, text: string; row: number; column: number, func: (text: string) => void }) {
-    const components: GameComponent[] = [];
+
+
+export function Cell(
+    props: {
+        key: string,
+        text: string;
+        row: number;
+        column: number,
+        clickHandler: (text: string) => void,
+        //spawnComponent:(row:number,column:number,compToSpawn:GameComponent)=>void,
+        components: GameComponent[]
+    }) {
+
 
 
 
@@ -48,14 +59,17 @@ export function Cell(props: {key:string, text: string; row: number; column: numb
     }
 
     function HandleClick() {
-        props.func("Cell with id:["+ GetId()+"] called you.");
+        props.clickHandler("Cell with id:[" + GetId() + "] called you.");
     }
 
     function GetText(): string {
-        return "";
+
+        if (props.components.length == 0)
+            return "";
+
         var text: string = "<span>";
 
-        components.forEach(c => {
+        props.components.forEach(c => {
             text += c.name + ",";
         });
         text += "</span>";

@@ -46,6 +46,18 @@
  .hexText {
      z-index: 2;
      position: absolute;
-     top: 40%;
+     top: 25%;
      left: 15%;
+     max-width: 75%;
+     font-size: 11px;
  }
+
+    #container {
+      position: relative;
+      width: 100px;
+      height: 400px;
+      background-color:aqua;
+    }
+    #container div{
+        display:inline;
+    }

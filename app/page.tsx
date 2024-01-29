@@ -1,31 +1,38 @@
 'use client';
 import { MouseEventHandler, useState } from 'react';
 import { Button } from './Components/Button';
-import { GameState, Mode } from './Classes/classes'
+import { CellDS, GameComponent, GameState, Mode } from './Classes/classes'
 import { Cell } from './Components/Cell';
+import React from 'react';
 
 export const GlobalSettings = {
-    size: 50
+    size: 50,
+    rowCount: 5,
+    columnCount: 5
 };
 
-const gameState = new GameState();
+
+
+//const gameState = new GameState();
 
 export default function Main() {
-    const [currentMode, setCurrentMode] = useState(Mode.normal);
 
     return (
-        <Grid currentMode={currentMode}  />
+        <>
+            <Grid />
+
+        </>
     )
 }
 
-export function Grid(props: { currentMode: Mode }) {
+export function Grid() {
+    const [currentMode, setCurrentMode] = useState(Mode.normal);
+    const [gameState, setGameState] = useState(new GameState());
+
+    //#region websocket stuff
 
     var ws_uri = "ws://localhost:8080";
     let wb = new WebSocket(ws_uri);
-
-    function CellClick(text: string): void {
-        console.info(text);
-    }
 
     function sendtoServer(): void {
         wb.send("hey");
@@ -39,46 +46,69 @@ export function Grid(props: { currentMode: Mode }) {
         // 3	CLOSED	The connection is closed or couldn't be opened.
     }
 
-
     function getClientList(): void {
         wb.send('{"type":"getClients"}');
     }
 
-    wb.onmessage = function(event) {
+    wb.onmessage = function (event) {
         //when something comes from the server
         console.log("some data came from ws: " + event.data);
     };
 
-    const rows = [];
-    for (let i = 0; i < 5; i++) {
-        for (let j = 0; j < 5; j++) {
-            rows.push(<Cell key={i + "_" + j} text='test' func={CellClick} column={i} row={j} />);
+    //#endregion
+
+    function CellClick(text: string): void {
+        console.info(text);
+    }
+    const cells = [];
+    for (let c = 0; c < GlobalSettings.columnCount; c++) {
+        for (let r = 0; r < GlobalSettings.rowCount; r++) {
+            var key = c + "_" + r;
+
+            cells.push(<Cell key={key} text='test' clickHandler={CellClick} components={GetCellDSByKey(key).components} column={c} row={r} />);
         }
+    }
+
+    function GetCellDSByKey(key: string): CellDS {
+        return gameState.cells.find(v => v.key == key) as CellDS;
+    }
+
+
+
+    function SpawnGameComponent(key: string, comp: GameComponent) {
+        GetCellDSByKey(key).components.push(comp);
+        setGameState(gameState);
     }
 
     function handleMoveButtonClick() {
         if (gameState.mode == Mode.normal) {
-            //setCurrentMode(Mode.move);
+            setCurrentMode(Mode.move);
             gameState.mode = Mode.move;
         }
         else if (gameState.mode == Mode.move) {
-            // setCurrentMode(Mode.normal);
+            setCurrentMode(Mode.normal);
             gameState.mode = Mode.normal;
         }
+    }
+
+    function spawnPawn() {
+        SpawnGameComponent("0_0", new GameComponent("mec"));
     }
 
     return (
         <>
             <div className="gameBoard">
-                <div style={{ float: 'right' }} className='controls'>
-                    <Button onClick={handleMoveButtonClick} text={0 == Mode.normal ? 'Move' : 'Cancel Move'}>
+                <div style={{ float: 'right', display: 'grid' }} className='controls'>
+                    <Button onClick={handleMoveButtonClick} text={currentMode == Mode.normal ? 'Move' : 'Cancel Move'}>
                     </Button>
                     <Button onClick={sendtoServer} text="sendtoServer"></Button>
                     <Button onClick={logWBState} text="logWBState"></Button>
                     <Button onClick={getClientList} text="getClientList"></Button>
+                    <Button onClick={spawnPawn} text="Spawn Pawn"></Button>
                 </div>
-                <div className='grid'>{rows}</div>
+                <div className='grid'>{cells}</div>
             </div>
+
         </>
     )
 }
