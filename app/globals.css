@@ -9,7 +9,7 @@
  }
 
 
- .hexagon>div>div {
+ .h1, .h2, .h3 {
      position: absolute;
      border-style: solid;
      border-color: black;

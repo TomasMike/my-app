@@ -1,8 +1,19 @@
 "use client";
-import { GameComponent } from "../Classes/classes";
+import React, { Children, useEffect } from "react";
+import { GameComponentDS } from "../Classes/classes";
 import { GlobalSettings } from "../page";
+import { GameComponent } from "./GameComponent";
 
 
+class blbosticka extends React.Component {
+    render() {
+        return (
+            <div>
+                ...some HTML...
+            </div>
+        );       
+    }
+}
 
 export function Cell(
     props: {
@@ -12,11 +23,15 @@ export function Cell(
         column: number,
         clickHandler: (text: string) => void,
         //spawnComponent:(row:number,column:number,compToSpawn:GameComponent)=>void,
-        components: GameComponent[]
+        components: GameComponentDS[]
     }) {
 
 
+    const comps:React.JSX.Element[] = [];
 
+    props.components.forEach(function(c){
+        comps.push(<GameComponent component={c} />);
+    });
 
     function GetTop(): string {
         let value = props.row * ElementHeight();
@@ -62,20 +77,7 @@ export function Cell(
         props.clickHandler("Cell with id:[" + GetId() + "] called you.");
     }
 
-    function GetText(): string {
-
-        if (props.components.length == 0)
-            return "";
-
-        var text: string = "<span>";
-
-        props.components.forEach(c => {
-            text += c.name + ",";
-        });
-        text += "</span>";
-
-        return text;
-    }
+   
 
     function GetId(): string {
         return props.column + "_" + props.row;
@@ -92,8 +94,9 @@ export function Cell(
                 width: ElementWidth() + "px",
             }}
         >
+            
             <div style={{ backgroundColor: BackgroundColor() }} className="hexText">
-                {GetText()}
+                {comps}
             </div>
             <div>
                 <div
