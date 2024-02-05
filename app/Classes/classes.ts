@@ -1,5 +1,18 @@
 import { GlobalSettings } from "../page";
 
+export class Utils {
+  static getCellStateColor(state: CellState): string {
+    switch (state) {
+      case CellState.actionInvalidDestination:
+      case CellState.actionInvalidDestination:
+      case CellState.actionInvalidDestination:
+      case CellState.default:
+      default:
+        return "rgb(247, 239, 239)";
+    }
+  }
+}
+
 export enum Mode {
   normal,
   move,
@@ -37,10 +50,10 @@ export class Message {
 }
 
 export enum CellState {
-    default,
-    actionOriginLocation,
-    actionValidDestination,
-    actionInvalidDestination,
+  default,
+  actionOriginLocation,
+  actionValidDestination,
+  actionInvalidDestination,
 }
 
 export class CellDS {

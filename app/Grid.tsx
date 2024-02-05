@@ -63,7 +63,6 @@ export function Grid() {
         console.log("useeffect");
     });
 
-
     function SpawnGameComponent(key: string, comp: GameComponentDS) {
 
         var newState = window.structuredClone(gameState);
@@ -73,8 +72,6 @@ export function Grid() {
     }
 
     function handleMoveButtonClick() {
-
-
 
         if (gameState.mode == Mode.normal) {
             setCurrentMode(Mode.move);
@@ -116,8 +113,6 @@ export function Grid() {
                 </div>
                 <div className='grid'>{cells}</div>
             </div>
-
-
         </>
     );
 }
