@@ -24,9 +24,11 @@ export enum ComponentType {}
 
 export class GameComponentDS {
   name: string = "none";
+  isPlayerMainCharacter: boolean;
 
-  constructor(name: string) {
+  constructor(name: string, isPlayerMainCharacter: boolean = true) {
     this.name = name;
+    this.isPlayerMainCharacter = isPlayerMainCharacter;
   }
 }
 
@@ -34,16 +36,25 @@ export class Message {
   type: string = "generic";
 }
 
+export enum CellState {
+    default,
+    actionOriginLocation,
+    actionValidDestination,
+    actionInvalidDestination,
+}
+
 export class CellDS {
   row: number;
   column: number;
   components: Array<GameComponentDS>;
   key: string;
+  cellState: CellState;
 
   constructor(row: number, column: number) {
     this.row = row;
     this.column = column;
     this.components = new Array<GameComponentDS>();
     this.key = this.column + "_" + this.row;
+    this.cellState = CellState.default;
   }
 }

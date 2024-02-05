@@ -1,6 +1,6 @@
 "use client";
 import React, { Children, useEffect } from "react";
-import { GameComponentDS } from "../Classes/classes";
+import { CellDS, GameComponentDS } from "../Classes/classes";
 import { GlobalSettings } from "../page";
 import { GameComponent } from "./GameComponent";
 
@@ -11,12 +11,13 @@ class blbosticka extends React.Component {
             <div>
                 ...some HTML...
             </div>
-        );       
+        );
     }
 }
 
 export function Cell(
     props: {
+        cellDS: CellDS,
         key: string,
         text: string;
         row: number;
@@ -27,10 +28,10 @@ export function Cell(
     }) {
 
 
-    const comps:React.JSX.Element[] = [];
+    const comps: React.JSX.Element[] = [];
 
-    props.components.forEach(function(c){
-        comps.push(<GameComponent component={c} />);
+    props.components.forEach(function (c, i) {
+        comps.push(<GameComponent component={c} key={i} />);
     });
 
     function GetTop(): string {
@@ -77,10 +78,12 @@ export function Cell(
         props.clickHandler("Cell with id:[" + GetId() + "] called you.");
     }
 
-   
-
     function GetId(): string {
         return props.column + "_" + props.row;
+    }
+
+    function GetCellColor(): string {
+        return GlobalSettings.getCellStateColor(props.cellDS.cellState);
     }
 
     return (
@@ -92,9 +95,9 @@ export function Cell(
                 left: Left(),
                 height: ElementHeight() + "px",
                 width: ElementWidth() + "px",
+
             }}
         >
-            
             <div style={{ backgroundColor: BackgroundColor() }} className="hexText">
                 {comps}
             </div>

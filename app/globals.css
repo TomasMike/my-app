@@ -8,6 +8,14 @@
      position: absolute;
  }
 
+ .controls{
+    float: right;
+     
+ }
+ .controls>div{
+    margin-top:10px;
+    display: grid;
+ }
 
  .h1, .h2, .h3 {
      position: absolute;

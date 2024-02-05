@@ -1,13 +1,24 @@
 'use client';
-import { Component, MouseEventHandler } from 'react';
 import React from 'react';
-import ReactDOM from 'react-dom';
 import { Grid } from './Grid';
+import { CellState } from './Classes/classes';
 
 export const GlobalSettings = {
     size: 50,
     rowCount: 5,
-    columnCount: 5
+    columnCount: 5,
+    getCellStateColor: function(state:CellState): string{
+        switch(state)
+        {
+            case CellState.actionInvalidDestination:
+            case CellState.actionInvalidDestination:
+            case CellState.actionInvalidDestination:
+            case CellState.default : 
+            default:
+                return "rgb(247, 239, 239)";
+        }
+    }
+
 };
 
 
@@ -23,5 +34,3 @@ export default function Main() {
         </>
     )
 }
-
-

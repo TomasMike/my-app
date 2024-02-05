@@ -10,7 +10,7 @@ import { GlobalSettings } from './page';
 export function Grid() {
     const [currentMode, setCurrentMode] = useState(Mode.normal);
     const [gameState, setGameState] = useState(new GameState());
-    const [cellsx, setCellX] = useState(gameState.cells);
+    //const [cellsx, setCellX] = useState(gameState.cells);
 
 
     //#region websocket stuff
@@ -51,12 +51,12 @@ export function Grid() {
         for (let r = 0; r < GlobalSettings.rowCount; r++) {
             var key = c + "_" + r;
 
-            cells.push(<Cell key={key} text='test' clickHandler={CellClick} components={GetCellDSByKey(key).components} column={c} row={r} />);
+            cells.push(<Cell cellDS={GetCellDSByKey(key)} key={key} text='test' clickHandler={CellClick} components={GetCellDSByKey(key).components} column={c} row={r} />);
         }
     }
 
     function GetCellDSByKey(key: string): CellDS {
-        return cellsx.find(v => v.key == key) as CellDS;
+        return gameState.cells.find(v => v.key == key) as CellDS;
     }
 
     useEffect(() => {
@@ -66,19 +66,16 @@ export function Grid() {
 
     function SpawnGameComponent(key: string, comp: GameComponentDS) {
 
-        var indexOfCell = cellsx.indexOf(GetCellDSByKey(key));
+        var newState = window.structuredClone(gameState);
+        newState.cells[gameState.cells.indexOf(GetCellDSByKey(key))].components.push(comp);
 
-        var newCells = cellsx.map((c, i) => {
-            if (i === indexOfCell)
-                c.components = [...c.components, comp];
-
-            return c;
-        });
-
-        setCellX(newCells);
+        setGameState(newState);
     }
 
     function handleMoveButtonClick() {
+
+
+
         if (gameState.mode == Mode.normal) {
             setCurrentMode(Mode.move);
             gameState.mode = Mode.move;
@@ -96,20 +93,30 @@ export function Grid() {
         console.log(gameState);
     }
 
+    function IsPawnInGame(): boolean {
+        return gameState.cells.some((c) => c.components.some((c) => c.isPlayerMainCharacter));
+    }
+
     return (
         <>
             <div className="gameBoard">
-                <div style={{ float: 'right', display: 'grid' }} className='controls'>
-                    <Button onClick={handleMoveButtonClick} text={currentMode == Mode.normal ? 'Move' : 'Cancel Move'}>
-                    </Button>
-                    <Button onClick={sendtoServer} text="sendtoServer"></Button>
-                    <Button onClick={logWBState} text="logWBState"></Button>
-                    <Button onClick={getClientList} text="getClientList"></Button>
-                    <Button onClick={spawnPawn} text="Spawn Pawn"></Button>
-                    <Button onClick={logGameState} text="logGameState"></Button>
+
+                <div className='controls'>
+                    <div className="mainGameButtons">
+                        <Button onClick={handleMoveButtonClick} text={currentMode == Mode.normal ? 'Move' : 'Cancel Move'}>
+                        </Button>
+                        <Button enabled={IsPawnInGame()} onClick={spawnPawn} text="Spawn Pawn"></Button>
+                    </div>
+                    <div className="DebugButtons">
+                        <Button onClick={sendtoServer} text="sendtoServer"></Button>
+                        <Button onClick={logWBState} text="logWBState"></Button>
+                        <Button onClick={getClientList} text="getClientList"></Button>
+                        <Button onClick={logGameState} text="logGameState"></Button>
+                    </div>
                 </div>
                 <div className='grid'>{cells}</div>
             </div>
+
 
         </>
     );
