@@ -2,20 +2,42 @@ import { GlobalSettings } from "../page";
 
 export class Utils {
   static getCellStateColor(state: CellState): string {
-    switch (state) {
-      case CellState.actionInvalidDestination:
-      case CellState.actionInvalidDestination:
-      case CellState.actionInvalidDestination:
-      case CellState.default:
-      default:
-        return "rgb(247, 239, 239)";
-    }
+    return GlobalSettings.CellStateColors.has(state)
+      ? (GlobalSettings.CellStateColors.get(state) as string)
+      : "";
   }
+
+  static GetDistanceBetweenTwoCells(cellOneKey: string, cellTwoKey: string): number 
+  {
+    var cellOneCoords = this.GetColumnRowFromCellKey(cellOneKey);
+    var cellTwoCoords = this.GetColumnRowFromCellKey(cellTwoKey);
+    
+    if(cellOneCoords.column == cellTwoCoords.column)
+    {
+
+    }
+
+    return 0;
+  }
+
+    static GetColumnRowFromCellKey(key: string): {column: number, row: number}
+    {
+        return {
+            column:Number(key.substring(0, key.indexOf("_"))),
+            row:Number(key.substring(key.indexOf("_")+1))
+        }
+    } 
 }
 
 export enum Mode {
   normal,
   move,
+}
+
+export enum HexDisplayMode{
+    //allways using even setup
+    Pointy,
+    Flat,
 }
 export class GameState {
   mode: Mode;
@@ -25,8 +47,8 @@ export class GameState {
     this.mode = Mode.normal;
     this.cells = [];
 
-    for (let c = 0; c < GlobalSettings.columnCount; c++) {
-      for (let r = 0; r < GlobalSettings.rowCount; r++) {
+    for (let c = 0; c < GlobalSettings.ColumnCount; c++) {
+      for (let r = 0; r < GlobalSettings.RowCount; r++) {
         this.cells.push(new CellDS(r, c));
       }
     }
@@ -60,14 +82,14 @@ export class CellDS {
   row: number;
   column: number;
   components: Array<GameComponentDS>;
-  key: string;
+  id:string;
   cellState: CellState;
 
   constructor(row: number, column: number) {
     this.row = row;
     this.column = column;
     this.components = new Array<GameComponentDS>();
-    this.key = this.column + "_" + this.row;
+    this.id = this.column + "_" + this.row;
     this.cellState = CellState.default;
   }
 }

@@ -1,6 +1,6 @@
 "use client";
 import React, { Children, useEffect } from "react";
-import { CellDS, GameComponentDS } from "../Classes/classes";
+import { CellDS, GameComponentDS, Utils } from "../Classes/classes";
 import { GlobalSettings } from "../page";
 import { GameComponent } from "./GameComponent";
 
@@ -19,14 +19,15 @@ export function Cell(
     props: {
         cellDS: CellDS,
         key: string,
+        id: string,
         text: string;
         row: number;
         column: number,
         clickHandler: (text: string) => void,
         //spawnComponent:(row:number,column:number,compToSpawn:GameComponent)=>void,
-        components: GameComponentDS[]
+        components: GameComponentDS[],
+        //cellState: CellState
     }) {
-
 
     const comps: React.JSX.Element[] = [];
 
@@ -34,71 +35,101 @@ export function Cell(
         comps.push(<GameComponent component={c} key={i} />);
     });
 
-    function GetTop(): string {
-        let value = props.row * ElementHeight();
+    function CellContainterElementTop(): string {
+        var value: number;
 
-        if (props.column % 2 != 0) value += Math.round(ElementHeight() / 2);
+        if (GlobalSettings.IsHexDisplayModeFlat()) {
+            value = props.row * CellContainerElementHeight();
+
+            if (props.column % 2 != 0) value += Math.round(CellContainerElementHeight() / 2);
+        }
+        else {
+            //value = props.row * CellContainerElementHeight();
+            value = Math.round((props.row * CellContainerElementHeight() * 3) / 4);
+        }
+        
+        return value + "px";
+
+
+    }
+
+    function CellContainerElementLeft(): string {
+        var value: number;
+
+        if (GlobalSettings.IsHexDisplayModeFlat()) {
+            value = Math.round((props.column * CellContainerElementWidth() * 3) / 4);
+        }
+        else {
+            // let value = props.column * CellContainerElementWidth();
+            // if (props.row % 2 != 0) value += Math.round(CellContainerElementWidth() / 2);
+            // return value + "px";
+            value = Math.round(props.column * CellContainerElementWidth());
+            if (props.row % 2 != 0) value += Math.round(CellContainerElementWidth() / 2);
+        }
 
         return value + "px";
     }
 
-    function Left(): string {
-        return Math.round((props.column * ElementWidth() * 3) / 4) + "px";
+    function CellContainerElementHeight(): number {
+        if (GlobalSettings.IsHexDisplayModeFlat()) {
+            return InnerElementWidth();
+        }
+        else
+            return GlobalSettings.Size * 2;
     }
 
-    function ElementHeight(): number {
-        return InnerElementWidth();
-    }
-
-    function ElementWidth(): number {
-        return GlobalSettings.size * 2;
+    function CellContainerElementWidth(): number {
+        if (GlobalSettings.IsHexDisplayModeFlat())
+            return GlobalSettings.Size * 2;
+        else
+            return InnerElementWidth();
     }
 
     function InnerElementWidth(): number {
-        return Math.round(Math.sqrt(3) * GlobalSettings.size);
+        return Math.round(Math.sqrt(3) * GlobalSettings.Size);
     }
 
     function InnerElementHeight(): number {
-        return GlobalSettings.size;
+        return GlobalSettings.Size;
     }
 
     function InnerComponentTop(): string {
-        return Math.round(GlobalSettings.size * 0.4) + "px";
+        if (GlobalSettings.IsHexDisplayModeFlat())
+            return Math.round(GlobalSettings.Size * 0.37) + "px";
+        else
+            return Math.round(GlobalSettings.Size * 0.5) + "px";
     }
 
     function InnerComponentLeft(): string {
-        return Math.round(GlobalSettings.size * 0.15) + "px";
-    }
-
-    function BackgroundColor(): string {
-        return "lightgreen";
+        if (GlobalSettings.IsHexDisplayModeFlat())
+            return Math.round(GlobalSettings.Size * 0.11) + "px";
+        else
+            return Math.round(GlobalSettings.Size * -0.01) + "px";
     }
 
     function HandleClick() {
-        props.clickHandler("Cell with id:[" + GetId() + "] called you.");
+        props.clickHandler("Cell with id:[" + props.key + "] called you.");
     }
 
-    function GetId(): string {
-        return props.column + "_" + props.row;
-    }
-
-    function GetCellColor(): string {
-        return GlobalSettings.getCellStateColor(props.cellDS.cellState);
+    function GetCellBackgroundColor(): string {
+        return Utils.getCellStateColor(props.cellDS.cellState);
     }
 
     return (
         <div
-            id={GetId()}
-            className="hexagon flat"
+            id={props.id}
+            className={+ GlobalSettings.IsHexDisplayModeFlat() ? "hexagon flat" : "hexagon pointy"}
             style={{
-                top: GetTop(),
-                left: Left(),
-                height: ElementHeight() + "px",
-                width: ElementWidth() + "px",
-
+                top: CellContainterElementTop(),
+                left: CellContainerElementLeft(),
+                height: CellContainerElementHeight() + "px",
+                width: CellContainerElementWidth() + "px",
+                backgroundColor: "red",
+                border: "solid black 1px"
             }}
         >
-            <div style={{ backgroundColor: BackgroundColor() }} className="hexText">
+            <div className="hexText">
+                {props.id}
                 {comps}
             </div>
             <div>
@@ -110,6 +141,8 @@ export function Cell(
                         height: InnerElementHeight(),
                         top: InnerComponentTop(),
                         left: InnerComponentLeft(),
+                        backgroundColor: GetCellBackgroundColor()
+
                     }}
                 />
                 <div
@@ -120,6 +153,8 @@ export function Cell(
                         height: InnerElementHeight(),
                         top: InnerComponentTop(),
                         left: InnerComponentLeft(),
+                        backgroundColor: GetCellBackgroundColor()
+
                     }}
                 />
                 <div
@@ -130,6 +165,8 @@ export function Cell(
                         height: InnerElementHeight(),
                         top: InnerComponentTop(),
                         left: InnerComponentLeft(),
+                        backgroundColor: GetCellBackgroundColor()
+
                     }}
                 />
             </div>
