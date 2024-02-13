@@ -4,7 +4,7 @@ import { Button } from './Components/Button';
 import { CellDS, CellState, GameComponentDS, GameState, Mode } from './Classes/classes';
 import { Cell } from './Components/Cell';
 import React from 'react';
-import { GlobalSettings } from './page';
+import { GlobalSettings } from './GlobalSettings';
 
 
 export function Grid() {
@@ -51,7 +51,6 @@ export function Grid() {
                 cellDS={GetCellDSById(k)}
                 key={k}
                 id={k}
-                text='test'
                 clickHandler={CellClick}
                 components={GetCellDSById(k).components}
                 column={c}
@@ -72,8 +71,18 @@ export function Grid() {
 
     function SpawnGameComponent(cellId: string, comp: GameComponentDS) {
 
+        // var newState = window.structuredClone(gameState);
+        // newState.cells[gameState.cells.indexOf(GetCellDSById(cellId))].components.push(comp);
+
+        // SetGameState(newState);
+        gameState.cells[gameState.cells.indexOf(GetCellDSById(cellId))].components.push(comp);
+        UpdateGameState();
+    }
+
+    function UpdateGameState():void
+    {
         var newState = window.structuredClone(gameState);
-        newState.cells[gameState.cells.indexOf(GetCellDSById(cellId))].components.push(comp);
+        //newState.cells[gameState.cells.indexOf(GetCellDSById(cellId))].components.push(comp);
 
         SetGameState(newState);
     }
@@ -81,6 +90,7 @@ export function Grid() {
     function HandleMoveButtonClick() {
 
         if (gameState.mode == Mode.normal) {
+            SetMoveMode("0_0");
             SetCurrentMode(Mode.move);
             gameState.mode = Mode.move;
         }
@@ -92,8 +102,11 @@ export function Grid() {
 
     function SetMoveMode(moveOriginCellId: string): void {
         var moveValue = 1;
+        
+        GetCellDSById(moveOriginCellId).text = "move from here";
+        GetCellDSById(moveOriginCellId).cellState = CellState.actionOriginLocation;
 
-
+        UpdateGameState();
     }
 
 
@@ -126,8 +139,6 @@ export function Grid() {
                     </div>
                 </div>
                 <div className='grid' style={{
-                    backgroundColor: "green", 
-                    border: "black", 
                     position:"absolute",
                 }}>{cells}</div>
             </div>

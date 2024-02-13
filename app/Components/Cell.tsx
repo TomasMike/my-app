@@ -1,7 +1,7 @@
 "use client";
 import React, { Children, useEffect } from "react";
 import { CellDS, GameComponentDS, Utils } from "../Classes/classes";
-import { GlobalSettings } from "../page";
+import { GlobalSettings } from '../GlobalSettings';
 import { GameComponent } from "./GameComponent";
 
 
@@ -20,7 +20,6 @@ export function Cell(
         cellDS: CellDS,
         key: string,
         id: string,
-        text: string;
         row: number;
         column: number,
         clickHandler: (text: string) => void,
@@ -111,6 +110,10 @@ export function Cell(
         props.clickHandler("Cell with id:[" + props.key + "] called you.");
     }
 
+    function GetText():string{
+        return props.cellDS.text + "-" + props.id;
+    }
+
     function GetCellBackgroundColor(): string {
         return Utils.getCellStateColor(props.cellDS.cellState);
     }
@@ -118,18 +121,18 @@ export function Cell(
     return (
         <div
             id={props.id}
-            className={+ GlobalSettings.IsHexDisplayModeFlat() ? "hexagon flat" : "hexagon pointy"}
+            className={GlobalSettings.IsHexDisplayModeFlat() ? "hexagon flat" : "hexagon pointy"}
             style={{
                 top: CellContainterElementTop(),
                 left: CellContainerElementLeft(),
                 height: CellContainerElementHeight() + "px",
                 width: CellContainerElementWidth() + "px",
-                backgroundColor: "red",
-                border: "solid black 1px"
+                //backgroundColor: "red",
+                //border: "solid black 1px"
             }}
         >
             <div className="hexText">
-                {props.id}
+                {GetText()}
                 {comps}
             </div>
             <div>

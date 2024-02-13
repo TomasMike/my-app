@@ -1,4 +1,4 @@
-import { GlobalSettings } from "../page";
+import { GlobalSettings } from '../GlobalSettings';
 
 export class Utils {
   static getCellStateColor(state: CellState): string {
@@ -84,6 +84,7 @@ export class CellDS {
   components: Array<GameComponentDS>;
   id:string;
   cellState: CellState;
+  text:string;
 
   constructor(row: number, column: number) {
     this.row = row;
@@ -91,5 +92,6 @@ export class CellDS {
     this.components = new Array<GameComponentDS>();
     this.id = this.column + "_" + this.row;
     this.cellState = CellState.default;
+    this.text= "";
   }
 }
