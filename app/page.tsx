@@ -1,13 +1,13 @@
 'use client';
 import React from 'react';
-import { Grid } from './Grid';
+import { GloomhavenGrid } from './Grid';
 
 
 export default function Main() {
 
     return (
         <>
-            <Grid />
+            <GloomhavenGrid />
         </>
     )
 }

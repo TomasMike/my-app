@@ -1,9 +1,9 @@
 "use client";
 import React, { Children, useEffect } from "react";
-import { CellDS, GameComponentDS, Utils } from "../Classes/classes";
-import { GlobalSettings } from '../GlobalSettings';
+import { CellDS, GameComponentDS } from "../Classes/Classes";
+import { Utils } from "../Classes/Utils";
 import { GameComponent } from "./GameComponent";
-
+import GlobalSettings from "../Classes/GlobalSettings";
 
 class blbosticka extends React.Component {
     render() {
@@ -23,9 +23,7 @@ export function Cell(
         row: number;
         column: number,
         clickHandler: (text: string) => void,
-        //spawnComponent:(row:number,column:number,compToSpawn:GameComponent)=>void,
         components: GameComponentDS[],
-        //cellState: CellState
     }) {
 
     const comps: React.JSX.Element[] = [];
@@ -43,10 +41,9 @@ export function Cell(
             if (props.column % 2 != 0) value += Math.round(CellContainerElementHeight() / 2);
         }
         else {
-            //value = props.row * CellContainerElementHeight();
             value = Math.round((props.row * CellContainerElementHeight() * 3) / 4);
         }
-        
+
         return value + "px";
 
 
@@ -59,9 +56,6 @@ export function Cell(
             value = Math.round((props.column * CellContainerElementWidth() * 3) / 4);
         }
         else {
-            // let value = props.column * CellContainerElementWidth();
-            // if (props.row % 2 != 0) value += Math.round(CellContainerElementWidth() / 2);
-            // return value + "px";
             value = Math.round(props.column * CellContainerElementWidth());
             if (props.row % 2 != 0) value += Math.round(CellContainerElementWidth() / 2);
         }
@@ -107,10 +101,10 @@ export function Cell(
     }
 
     function HandleClick() {
-        props.clickHandler("Cell with id:[" + props.key + "] called you.");
+        props.clickHandler("Cell with id:[" + props.id + "] called you.");
     }
 
-    function GetText():string{
+    function GetText(): string {
         return props.cellDS.text + "-" + props.id;
     }
 
@@ -145,7 +139,6 @@ export function Cell(
                         top: InnerComponentTop(),
                         left: InnerComponentLeft(),
                         backgroundColor: GetCellBackgroundColor()
-
                     }}
                 />
                 <div
@@ -157,7 +150,6 @@ export function Cell(
                         top: InnerComponentTop(),
                         left: InnerComponentLeft(),
                         backgroundColor: GetCellBackgroundColor()
-
                     }}
                 />
                 <div
@@ -169,7 +161,6 @@ export function Cell(
                         top: InnerComponentTop(),
                         left: InnerComponentLeft(),
                         backgroundColor: GetCellBackgroundColor()
-
                     }}
                 />
             </div>

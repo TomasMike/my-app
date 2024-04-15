@@ -1,33 +1,3 @@
-import { GlobalSettings } from '../GlobalSettings';
-
-export class Utils {
-  static getCellStateColor(state: CellState): string {
-    return GlobalSettings.CellStateColors.has(state)
-      ? (GlobalSettings.CellStateColors.get(state) as string)
-      : "";
-  }
-
-  static GetDistanceBetweenTwoCells(cellOneKey: string, cellTwoKey: string): number 
-  {
-    var cellOneCoords = this.GetColumnRowFromCellKey(cellOneKey);
-    var cellTwoCoords = this.GetColumnRowFromCellKey(cellTwoKey);
-    
-    if(cellOneCoords.column == cellTwoCoords.column)
-    {
-
-    }
-
-    return 0;
-  }
-
-    static GetColumnRowFromCellKey(key: string): {column: number, row: number}
-    {
-        return {
-            column:Number(key.substring(0, key.indexOf("_"))),
-            row:Number(key.substring(key.indexOf("_")+1))
-        }
-    } 
-}
 
 export enum Mode {
   normal,
@@ -39,23 +9,10 @@ export enum HexDisplayMode{
     Pointy,
     Flat,
 }
-export class GameState {
-  mode: Mode;
-  cells: CellDS[];
-
-  constructor() {
-    this.mode = Mode.normal;
-    this.cells = [];
-
-    for (let c = 0; c < GlobalSettings.ColumnCount; c++) {
-      for (let r = 0; r < GlobalSettings.RowCount; r++) {
-        this.cells.push(new CellDS(r, c));
-      }
-    }
-  }
+export enum ComponentType {
+    PlayerPawn,
+    Monster
 }
-
-export enum ComponentType {}
 
 export class GameComponentDS {
   name: string = "none";
@@ -95,3 +52,11 @@ export class CellDS {
     this.text= "";
   }
 }
+
+
+export class test{
+    static staticProperty = 'someValue';
+}
+
+
+;

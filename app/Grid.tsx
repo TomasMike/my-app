@@ -1,15 +1,18 @@
 'use client';
 import { useEffect, useState } from 'react';
 import { Button } from './Components/Button';
-import { CellDS, CellState, GameComponentDS, GameState, Mode } from './Classes/classes';
 import { Cell } from './Components/Cell';
 import React from 'react';
-import { GlobalSettings } from './GlobalSettings';
+import GlobalSettings from './Classes/GlobalSettings';
+import { CellDS, CellState, GameComponentDS, Mode } from './Classes/Classes';
+import { GameState } from "./Classes/GameState";
+import Logger from './Components/Logger';
 
 
-export function Grid() {
+export function GloomhavenGrid() {
     const [currentMode, SetCurrentMode] = useState(Mode.normal);
     const [gameState, SetGameState] = useState(new GameState());
+    const [logLines, SetLogLines] = useState(new Array<string>());
     //const [cellsx, setCellX] = useState(gameState.cells);
 
     //#region websocket stuff
@@ -40,8 +43,6 @@ export function Grid() {
         console.info(text);
     }
 
-
-
     const cells = [];
 
     for (let c = 0; c < GlobalSettings.ColumnCount; c++) {
@@ -58,8 +59,6 @@ export function Grid() {
             />);
         }
     }
-
-
 
     function GetCellDSById(id: string): CellDS {
         return gameState.cells.find(v => v.id == id) as CellDS;
@@ -98,6 +97,8 @@ export function Grid() {
             SetCurrentMode(Mode.normal);
             gameState.mode = Mode.normal;
         }
+
+        UpdateGameState();
     }
 
     function SetMoveMode(moveOriginCellId: string): void {
@@ -105,17 +106,23 @@ export function Grid() {
         
         GetCellDSById(moveOriginCellId).text = "move from here";
         GetCellDSById(moveOriginCellId).cellState = CellState.actionOriginLocation;
-
+        Log("test");
         UpdateGameState();
     }
 
+    
+    function Log(message: string):void
+    {
+        // var q = window.structuredClone(logLines);
+        // q.push(message);
+        // SetLogLines(q);
 
+        logLines.push(message);
+        SetLogLines(logLines);
+    }
 
     function SpawnPawn() {
         SpawnGameComponent("0_0", new GameComponentDS("mec"));
-    }
-    function LogGameState() {
-        console.log(gameState);
     }
 
     function IsPawnInGame(): boolean {
@@ -135,8 +142,8 @@ export function Grid() {
                         <Button onClick={sendtoServer} text="sendtoServer"></Button>
                         <Button onClick={logWBState} text="logWBState"></Button>
                         <Button onClick={getClientList} text="getClientList"></Button>
-                        <Button onClick={LogGameState} text="logGameState"></Button>
                     </div>
+                   <Logger lines={logLines}/>
                 </div>
                 <div className='grid' style={{
                     position:"absolute",

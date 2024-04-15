@@ -70,3 +70,6 @@
     #container div{
         display:inline;
     }
+    .logs li {
+        font-size: 13px;
+    }
